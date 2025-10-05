@@ -1,0 +1,38 @@
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js build / dev
+.next/
+out/
+dist/
+
+# Env / secrets
+.env
+.env.*       # e.g. .env.local, .env.production — keep all envs out of git
+
+# Editor / OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Test / coverage / cache
+coverage/
+.cache/
+.cache-loader/
+jest-cache/
+.vite/
+
+# Misc
+*.log
+.pnp.*
+*.local
