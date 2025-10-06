@@ -1,8 +1,8 @@
 export default function handler(req, res) {
-  // Clear the token cookie
-  res.setHeader(
-    "Set-Cookie",
-    `token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`
-  );
-  res.json({ ok: true });
+  // Clear the token cookie reliably: set Expires and Max-Age=0.
+  // Only add Secure when in production (so it still works on localhost HTTP).
+  const secureFlag = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  const cookie = `token=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; SameSite=Lax${secureFlag}`;
+  res.setHeader("Set-Cookie", cookie);
+  res.status(200).json({ ok: true });
 }
