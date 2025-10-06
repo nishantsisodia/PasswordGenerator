@@ -17,6 +17,9 @@ export default async function handler(req, res) {
   const token = jwt.sign(user, process.env.JWT_SECRET || "dev_secret", {
     expiresIn: "7d",
   });
-  res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; SameSite=Lax`);
+  const secureFlag = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  const maxAge = 60 * 60 * 24 * 7;
+  const cookie = `token=${token}; HttpOnly; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureFlag}`;
+  res.setHeader("Set-Cookie", cookie);
   res.status(201).json({ user });
 }
