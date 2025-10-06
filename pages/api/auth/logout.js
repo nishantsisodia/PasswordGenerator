@@ -1,4 +1,6 @@
 export default function handler(req, res) {
+  if (req.method !== "POST" && req.method !== "GET")
+    return res.status(405).end();
   // Clear the token cookie reliably: set Expires and Max-Age=0.
   // Only add Secure when in production (so it still works on localhost HTTP).
   const secureFlag = process.env.NODE_ENV === "production" ? "; Secure" : "";

@@ -22,6 +22,12 @@ export default function Page() {
     const [msg, setMsg] = useState('')
 
     useEffect(() => { (async () => { const r = await fetch('/api/auth/me'); setUser((await r.json()).user) })(); }, [])
+    // listen for auth changes dispatched by Layout (logout/login) so we can update UI without a full reload
+    useEffect(() => {
+        function onAuthChanged() { (async () => { const r = await fetch('/api/auth/me'); setUser((await r.json()).user) })(); }
+        window.addEventListener('auth-changed', onAuthChanged);
+        return () => window.removeEventListener('auth-changed', onAuthChanged);
+    }, [])
     useEffect(() => { (async () => { try { const r = await fetch('/api/stats'); setStats(await r.json()) } catch (e) { } })(); }, [])
 
     async function save(pwd) {

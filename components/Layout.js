@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 
 export default function Layout({ children }) {
@@ -10,6 +11,7 @@ export default function Layout({ children }) {
       ? localStorage.getItem("theme") || "light"
       : "light"
   );
+  const router = useRouter();
 
   useEffect(() => {
     async function me() {
@@ -30,10 +32,22 @@ export default function Layout({ children }) {
   }, [theme]);
 
   async function logout() {
-    await fetch("/api/auth/logout");
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (!res.ok) console.warn("logout responded with", res.status);
+    } catch (err) {
+      console.error("logout error", err);
+    }
+    // clear client state and navigate to home without full reload
     setUser(null);
-    // reload to clear any state
-    window.location.href = "/";
+    // replace avoids creating an extra history entry
+    router.replace("/");
+    // notify other components/pages that auth changed so they can update without a full reload
+    try {
+      window.dispatchEvent(new Event("auth-changed"));
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   return (
